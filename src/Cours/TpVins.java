@@ -41,17 +41,33 @@ public class TpVins {
 			structureOctet[i]=structure[i+1]*2;
 		}
 
-		int ligne = 65;
-		int colonne= 2;
+		
 
-		lecturecol (ligne, colonne, vinsBin) ;
+		System.out.println("lecture ligne 0");
+		lecturecol (0, 1, vinsBin) ;
+		System.out.println();
+		lecturecol (0, 2, vinsBin) ;
+		System.out.println();
+		System.out.println("lecture ligne 1");
+		lecturecol (1, 1, vinsBin) ;
+		System.out.println();
+		lecturecol (1, 2, vinsBin) ;
+		System.out.println();
 
-		swapLigne(1,2, vinsBin);
+		swapLigne(0,1, vinsBin);
 
+		System.out.println("apres swap");
 
-
-
-
+		System.out.println("lecture ligne 0");
+		lecturecol (0, 1, vinsBin) ;
+		System.out.println();
+		lecturecol (0, 2, vinsBin) ;
+		System.out.println();
+		System.out.println("lecture ligne 1");
+		lecturecol (1, 1, vinsBin) ;
+		System.out.println();
+		lecturecol (1, 2, vinsBin) ;
+		System.out.println();
 
 
 
@@ -64,23 +80,43 @@ public class TpVins {
 
 	private static void swapLigne(int a, int b, File vinsBin) {
 
-		RandomAccessFile raf2 = null;
+		RandomAccessFile rafB = null;
+		RandomAccessFile rafA = null;
 		int pointeurRAF = a*196;
 		char[] temp = new char[98];
 
 
 
 		try {
-			raf2 = new RandomAccessFile(vinsBin, "rw");
-			raf2.seek(pointeurRAF);
-			System.out.println("après seek pointeur = "+raf2.getFilePointer());
+			rafA = new RandomAccessFile(vinsBin, "rw");
+			rafB = new RandomAccessFile(vinsBin, "rw");
 
-			for (int i = 0; i < a+98; i++) {
-				temp[i]=raf2.readChar();
+
+
+			rafA.seek(a*196);
+			for (int i = 0; i < 98; i++) {
+				temp[i]=rafA.readChar();
+
 			}
+
+			rafA.seek(a*196);
+			rafB.seek(b*196);
+			for (int i = 0; i < 98; i++) {
+				rafA.writeChar(rafB.readChar());
+			}
+			rafB.seek(b*196);
 			for (char c : temp) {
-				System.out.println(c);
+				rafB.writeChar(c);
 			}
+
+
+
+
+
+
+
+
+
 
 
 		} catch (IOException e) {
@@ -88,7 +124,8 @@ public class TpVins {
 			e.printStackTrace();
 		}finally {
 			try {
-				raf2.close();
+				rafB.close();
+				rafA.close();
 			} catch (IOException e) {
 				// TODO Auto-generated catch block
 				e.printStackTrace();
@@ -109,13 +146,13 @@ public class TpVins {
 		try {
 			raf2 = new RandomAccessFile(vinsBin, "r");
 			raf2.seek(pointeurRAF);
-			System.out.println("après seek pointeur = "+raf2.getFilePointer());
-			//je suis bien positinné pour lire le 4e int
+						//je suis bien positinné pour lire le 4e int
 			for (int i = 0; i < structure[colonne]; i++) {
 				System.out.print(raf2.readChar());
 
 
 			}
+			System.out.println();
 
 
 
@@ -177,7 +214,7 @@ public class TpVins {
 					} else if ((tabChar[i]=='\t') ) {
 						int nbespace= structure[indexCol]-nbCaractere;
 						for (int j = 0; j < nbespace; j++) {
-							raf.writeChar('#');
+							raf.writeChar('.');
 						}
 						indexCol++;
 						nbCaractere=0;
