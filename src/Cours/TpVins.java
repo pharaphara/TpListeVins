@@ -82,8 +82,8 @@ public class TpVins {
 
 		RandomAccessFile rafB = null;
 		RandomAccessFile rafA = null;
-		int pointeurRAF = a*196;
 		char[] temp = new char[98];
+		System.out.println("test");
 
 
 
