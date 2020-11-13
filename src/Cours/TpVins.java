@@ -21,6 +21,7 @@ public class TpVins {
 	//etc
 
 	public static void main(String[] args) {
+		//TESTEEEE
 
 		//On commence par aller lire le fichier
 		lectureFichier(lesVins);
