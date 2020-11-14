@@ -21,16 +21,20 @@ public class TpVins {
 	//etc
 
 	public static void main(String[] args) {
-		//TESTEEEE
 
 		//On commence par aller lire le fichier
 		lectureFichier(lesVins);
+		System.out.println("bytes");
+		
 
 		File vinsBin = ecritureFichier(lesVins);
+		System.out.println(structure[2]);
+		
+		System.out.println(lectureLigne(390, vinsBin));
 
 		triSelectionRecursif(vinsBin, structure[0]);
 		
-		//rechercheDichoto(lesVins, "Caslot-Bourdin................................");
+		rechercheDichoto(lesVins, "Domaine De La Cave Lamartine------------------");
 
 
 	}
@@ -46,7 +50,8 @@ public class TpVins {
 
 
 	}
-
+	
+	
 	private static void ecritureLigne(File vinsBin, String ligne, int numeroLigne) {
 
 		RandomAccessFile raf = null;
@@ -55,7 +60,7 @@ public class TpVins {
 		
 		try {
 			raf = new RandomAccessFile(vinsBin, "rw");
-			raf.seek(numeroLigne*196);
+			raf.seek(numeroLigne*98);
 			raf.writeBytes(ligne);
 		} catch (IOException e) {
 			// TODO Auto-generated catch block
@@ -65,13 +70,13 @@ public class TpVins {
 		
 		
 	}
-
+	
 	private static String lecturecol(int ligne, int colonne, File vinsBin) {
 
 		RandomAccessFile raf2 = null;
 		String colonneString = "";
 		//accès au dbt de la ligne demandée
-		int pointeurRAF = ligne*196;
+		int pointeurRAF = ligne*98;
 		//accès au dbt de la colonne demandée
 		for (int i = 1; i < colonne; i++) {
 			pointeurRAF = structure[i]*2+pointeurRAF;
@@ -101,12 +106,12 @@ public class TpVins {
 		return colonneString;
 
 	}
-
+	
 	private static String lectureLigne(int numeroLigne, File vinsBin) {
 
 		RandomAccessFile raf2 = null;
 		//accès au dbt de la ligne demandée
-		int pointeurRAF = numeroLigne*196;
+		int pointeurRAF = numeroLigne*98;
 		String ligne ="";
 		byte [] tabBytes = new byte [98];
 
@@ -118,9 +123,7 @@ public class TpVins {
 			//for (int i = 0; i < 98; i++) {
 				raf2.read(tabBytes);				
 				ligne = new String(tabBytes);
-				
-//				ligne = ligne + Character.toString(raf2.readChar());
-			//}
+
 
 		} catch (IOException e) {
 			// TODO Auto-generated catch block
@@ -138,6 +141,90 @@ public class TpVins {
 	}
 
 
+//	private static File ecritureFichier(File lesVins) {
+//
+//		FileReader in=null;
+//		BufferedReader br = null;
+//		RandomAccessFile raf = null;
+//		String ligne = "";
+//		File retour = new File(lesVins.getParent()+"/VINSbin.DON");
+//
+//
+//
+//		if (retour.exists()) {
+//			return retour ;
+//		}
+//		try {
+//			in = new FileReader(lesVins);
+//			br = new BufferedReader(in);
+//			ligne = br.readLine();
+//			raf = new RandomAccessFile(retour,"rw");
+//			while(ligne!= null) {
+//
+//				char[] tabChar = ligne.toCharArray();
+//
+//
+//
+//				int indexCol = 1;
+//				int finLigne = tabChar.length - 1;
+//				int nbCaractere=0;
+//
+//
+//				for (int i = 0; i < tabChar.length; i++) {
+//
+//					//si on detecte un caractère on écrit le caractère
+//					//puis nbCaractere++
+//					if (tabChar[i]!='\t') {
+//						raf.writeChar(tabChar[i]);
+//						nbCaractere++;
+//
+//
+//						// des que l'on detecte un \t on vérifie le nb d'espace manquants
+//						// on les écrits avec le RAF puis on change de colone
+//					} else if ((tabChar[i]=='\t') ) {
+//						int nbespace= structure[indexCol]-nbCaractere;
+//						for (int j = 0; j < nbespace; j++) {
+//							raf.writeChar('.');
+//						}
+//						indexCol++;
+//						nbCaractere=0;
+//
+//
+//						// une fois arrivé au dernier caractère du tableau
+//						// on calcul le nombre d'espace manquant
+//						//puis on les imprime dans le fichier
+//					} else if (i == finLigne) {
+//						for (int j = 0; j < (structure[indexCol]-nbCaractere); j++) {
+//							raf.writeChar('@');
+//						}
+//					}
+//
+//				}
+//				ligne = br.readLine();
+//			}	
+//		}
+//		catch (IOException e) {
+//			// TODO Auto-generated catch block
+//			e.printStackTrace();
+//		}finally {
+//			try {
+//				br.close();
+//				in.close();
+//				raf.close();
+//
+//			} catch (IOException e) {
+//				// TODO Auto-generated catch block
+//				e.printStackTrace();
+//			}
+//
+//
+//
+//		}
+//
+//
+//
+//		return retour ;
+//	}
 	private static File ecritureFichier(File lesVins) {
 
 		FileReader in=null;
@@ -339,6 +426,7 @@ public class TpVins {
 			triSelectionRecursif(file, nbLignes-1);
 		}
 	}
+	
 
 	public static int rechercheDichoto(File file, String recherche)
 		{
