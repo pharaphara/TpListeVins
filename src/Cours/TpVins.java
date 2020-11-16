@@ -7,6 +7,7 @@ import java.io.File;
 import java.io.FileReader;
 import java.io.IOException;
 import java.io.RandomAccessFile;
+import java.io.UnsupportedEncodingException;
 
 
 
@@ -20,13 +21,22 @@ public class TpVins {
 		//On commence par aller lire le fichier
 		lectureFichier(lesVins);
 		System.out.println("bytes");
-		
+
 
 		File vinsBin = ecritureFichier(lesVins);
+		//File vinsBin = writeFileRaf(lesVins);
 
 		triSelectionRecursif(vinsBin, structure[0]);
-		String recherche = "Domaine Chante Alouette Cormeil---------------Saint Emilion Grand CruBordelais-----------Sjm74-R87";
+		
+		//si écritureFichier
+		String recherche = "Domaine Alain Geoffroy Vautigreau-------------";
+		
+		//si writeFileRaf
+		//String recherche = "Château Rauzan-Gassies                        Saint-Estephe          Bordelais           Lrq121O12C";
+		
 		rechercheDichoto(vinsBin,recherche);
+		
+		//rechercheV2(vinsBin, recherche);
 
 
 	}
@@ -36,20 +46,20 @@ public class TpVins {
 
 		String ligneA = lectureLigne(a, swapFile);
 		String ligneB = lectureLigne(b, swapFile);
-		
+
 		ecritureLigne(swapFile,ligneA, b);
 		ecritureLigne(swapFile,ligneB, a);
 
 
 	}
-	
-	
+
+
 	private static void ecritureLigne(File vinsBin, String ligne, int numeroLigne) {
 
 		RandomAccessFile raf = null;
-		
-		
-		
+
+
+
 		try {
 			raf = new RandomAccessFile(vinsBin, "rw");
 			raf.seek(numeroLigne*98);
@@ -58,18 +68,18 @@ public class TpVins {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
-		
-		
-		
+
+
+
 	}
-	
+
 	private static String lecturecol(int ligne, int colonne, File vinsBin) {
 
 		RandomAccessFile raf2 = null;
 		String colonneString = "";
-		//acc�s au dbt de la ligne demand�e
+		//accï¿½s au dbt de la ligne demandï¿½e
 		int pointeurRAF = ligne*98;
-		//acc�s au dbt de la colonne demand�e
+		//accï¿½s au dbt de la colonne demandï¿½e
 		for (int i = 1; i < colonne; i++) {
 			pointeurRAF = structure[i]*2+pointeurRAF;
 		}
@@ -77,12 +87,12 @@ public class TpVins {
 		try {
 			raf2 = new RandomAccessFile(vinsBin, "r");
 			raf2.seek(pointeurRAF);
-			//je suis bien positionn� pour lire la colonne demandée
+			//je suis bien positionnï¿½ pour lire la colonne demandÃ©e
 			//lecture de la colonne
 			for (int i = 0; i < structure[colonne]; i++) {
 				colonneString = colonneString + Character.toString(raf2.readChar());
 			}
-			
+
 
 		} catch (IOException e) {
 			// TODO Auto-generated catch block
@@ -98,23 +108,23 @@ public class TpVins {
 		return colonneString;
 
 	}
-	
+
 	private static String lectureLigne(int numeroLigne, File vinsBin) {
 
 		RandomAccessFile raf2 = null;
-		//accès au dbt de la ligne demandée
+		//accÃ¨s au dbt de la ligne demandÃ©e
 		int pointeurRAF = numeroLigne*98;
 		String ligne ="";
-		byte [] tabBytes = new byte [98];
+		byte [] tabBytes = new byte [98];//46 pour que la première colonne et 98 pour la ligne
 
 		try {
 			raf2 = new RandomAccessFile(vinsBin, "r");
 			raf2.seek(pointeurRAF);
-			//je suis bien positionné pour lire la colonne demandée
+			//je suis bien positionnÃ© pour lire la colonne demandÃ©e
 			//lecture de la colonne
 			//for (int i = 0; i < 98; i++) {
-				raf2.read(tabBytes);				
-				ligne = new String(tabBytes);
+			raf2.read(tabBytes);				
+			ligne = new String(tabBytes);
 
 
 		} catch (IOException e) {
@@ -130,6 +140,71 @@ public class TpVins {
 		}
 
 		return ligne;
+	}
+
+	private static String lecturecolonne1(int numeroLigne, File vinsBin) {
+
+		RandomAccessFile raf2 = null;
+		//accÃ¨s au dbt de la ligne demandÃ©e
+		int pointeurRAF = numeroLigne*98;
+		String ligne ="";
+		byte [] tabBytes = new byte [46];//46 pour que la première colonne et 98 pour la ligne
+
+		try {
+			raf2 = new RandomAccessFile(vinsBin, "r");
+			raf2.seek(pointeurRAF);
+			//je suis bien positionnÃ© pour lire la colonne demandÃ©e
+			//lecture de la colonne
+			//for (int i = 0; i < 98; i++) {
+			raf2.read(tabBytes);				
+			ligne = new String(tabBytes);
+
+
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}finally {
+			try {
+				raf2.close();
+			} catch (IOException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+		}
+
+		return ligne;
+	}
+	private static byte[] lectureCol1(int numeroLigne, File vinsBin) {
+
+		RandomAccessFile raf2 = null;
+		//accÃ¨s au dbt de la ligne demandÃ©e
+		int pointeurRAF = numeroLigne*98;
+
+		byte [] tabBytes = new byte [46];
+
+		try {
+			raf2 = new RandomAccessFile(vinsBin, "r");
+			raf2.seek(pointeurRAF);
+			//je suis bien positionnÃ© pour lire la colonne demandÃ©e
+			//lecture de la colonne
+			//for (int i = 0; i < 98; i++) {
+			raf2.read(tabBytes);				
+
+
+
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}finally {
+			try {
+				raf2.close();
+			} catch (IOException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+		}
+
+		return tabBytes;
 	}
 
 
@@ -164,15 +239,15 @@ public class TpVins {
 
 				for (int i = 0; i < tabBytes.length; i++) {
 
-					//si on detecte un caractère on écrit le caractère
+					//si on detecte un caractÃ¨re on Ã©crit le caractÃ¨re
 					//puis nbCaractere++
 					if (tabBytes[i]!='\t') {
 						raf.write(tabBytes[i]);
 						nbCaractere++;
 
 
-						// des que l'on detecte un \t on vérifie le nb d'espace manquants
-						// on les écrits avec le RAF puis on change de colone
+						// des que l'on detecte un \t on vÃ©rifie le nb d'espace manquants
+						// on les Ã©crits avec le RAF puis on change de colone
 					} else if ((tabBytes[i]=='\t') ) {
 						int nbespace= structure[indexCol]-nbCaractere;
 						for (int j = 0; j < nbespace; j++) {
@@ -182,7 +257,7 @@ public class TpVins {
 						nbCaractere=0;
 
 
-						// une fois arrivé au dernier caractère du tableau
+						// une fois arrivÃ© au dernier caractÃ¨re du tableau
 						// on calcul le nombre d'espace manquant
 						//puis on les imprime dans le fichier
 					} else if (i == finLigne) {
@@ -218,6 +293,65 @@ public class TpVins {
 		return retour ;
 	}
 
+	private static File writeFileRaf(File lesVins) {
+
+		RandomAccessFile lecture = null;
+		RandomAccessFile ecriture = null;
+		File retour = new File(lesVins.getParent()+"/binRAF.DON");
+
+
+
+
+		try {
+			lecture = new RandomAccessFile(lesVins,"r");
+			ecriture = new RandomAccessFile(retour,"rw");
+
+			int indexCol = 1;
+			int nbCaractere=0;
+
+
+			while (lecture.getFilePointer()!=lesVins.length()-1) {
+
+				int octetLu = lecture.readByte();
+
+				switch (octetLu) {
+				case 9: //tabulation
+					int nbespace= structure[indexCol]-nbCaractere;
+					for (int j = 0; j < nbespace; j++) {
+						ecriture.write(00100000);//00100000 = espace
+					}
+					indexCol++;
+					nbCaractere=0;
+					break;
+
+				case 10:	//fin de ligne
+				case 13:	//fin de ligne
+					indexCol=1;
+					nbCaractere=0;
+
+					break;
+				default:
+					ecriture.write(octetLu);
+					nbCaractere++;
+					break;
+				}
+
+
+
+
+
+			}
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+
+		;
+
+
+		return retour;
+	}
+
 	private static void lectureFichier(File lesVins) {
 
 
@@ -244,7 +378,7 @@ public class TpVins {
 
 
 
-				//il était sur l'acolade du dessus donc bug
+				//il Ã©tait sur l'acolade du dessus donc bug
 				ligne = br.readLine();
 			}	
 		}
@@ -277,7 +411,7 @@ public class TpVins {
 
 		for (int i = 0; i < ligne.length; i++) {
 
-			//si on detecte un caractère on est dans la colonne
+			//si on detecte un caractÃ¨re on est dans la colonne
 			if (ligne[i]!='\t') {
 
 				structureTemp[indexCol]++;
@@ -334,115 +468,140 @@ public class TpVins {
 			triSelectionRecursif(file, nbLignes-1);
 		}
 	}
-	
 
-//	public static int rechercheDichoto(File file, String recherche)
-//		{
-//
-//		// initialisation :
-//
-//		
-//
-//		int debut = 0;
-//		int fin = structure[0];	
-//		boolean trouve = false; // flag 
-//		boolean rechercheTerminee = false; // flag
-//
-//
-//		// traitement :
-//		do
-//		{
-//			System.out.print("portion de " + debut + " à " + fin + " : ");
-//			int milieu = (debut + fin) / 2;
-//
-//			if (recherche.equalsIgnoreCase(lecturecol(milieu, 1, file)))
-//			{
-//				System.out.println("Touvé !!! indice : " + milieu);
-//				trouve = true;
-//				return milieu;
-//			}
-//
-//			if (lecturecol(milieu, 1, file).compareTo(recherche) < 0)
-//			{
-//				System.out.println(" plus grand que " + lecturecol(milieu, 1, file));
-//				debut = milieu + 1;
-//			}
-//
-//			if (lecturecol(milieu, 1, file).compareTo(recherche) > 0)
-//			{
-//				System.out.println(" plus petit que " + lecturecol(milieu, 1, file));
-//				fin = milieu;
-//			}
-//
-//			if (fin == -1 || debut == structure[0] || debut == fin)
-//			{
-//				rechercheTerminee = true;
-//			}
-//		}
-//		while(!trouve && !rechercheTerminee);
-//
-//		if (!trouve)
-//		{
-//			System.out.println("El�ment non trouv�...");
-//		}
-//
-//
-//		return -1;
-//
-//	}
+
 	public static int rechercheDichoto(File file, String recherche)
 	{
 
-	// initialisation :
-
-	
-
-	int debut = 0;
-	int fin = structure[0];	
-	boolean trouve = false; // flag 
-	boolean rechercheTerminee = false; // flag
+		// initialisation :
 
 
-	// traitement :
-	do
+
+		int debut = 0;
+		int fin = structure[0];	
+		boolean trouve = false; // flag 
+		boolean rechercheTerminee = false; // flag
+
+
+		// traitement :
+		do
+		{
+			System.out.print("portion de " + debut + " Ã  " + fin + " : ");
+			int milieu = (debut + fin) / 2;
+
+			if (recherche.equals(lecturecolonne1(milieu, file)))
+			{
+				System.out.println("TouvÃ© !!! indice : " + milieu);
+				trouve = true;
+				System.out.println(lectureLigne(milieu, file));
+				return milieu;
+			}
+
+			if (lecturecolonne1(milieu, file).compareTo(recherche) < 0)
+			{
+				System.out.println(" plus grand que " + lecturecolonne1(milieu, file));
+				debut = milieu + 1;
+			}
+
+			if (lecturecolonne1(milieu, file).compareTo(recherche) > 0)
+			{
+				System.out.println(" plus petit que " + lecturecolonne1(milieu, file));
+				fin = milieu;
+			}
+
+			if (fin == -1 || debut == structure[0] || debut == fin)
+			{
+				rechercheTerminee = true;
+			}
+		}
+		while(!trouve && !rechercheTerminee);
+
+		if (!trouve)
+		{
+			System.out.println("Elï¿½ment non trouvï¿½...");
+		}
+
+
+		return -1;
+
+	}	
+
+	public static int rechercheV2(File file, String recherche)
 	{
-		System.out.print("portion de " + debut + " à " + fin + " : ");
-		int milieu = (debut + fin) / 2;
 
-		if (recherche.equals(lectureLigne(milieu, file)))
+		// initialisation :
+
+
+
+		int debut = 0;
+		int fin = structure[0];	
+		boolean trouve = false; // flag 
+		boolean rechercheTerminee = false; // flag
+
+
+		byte[] searchByte = recherche.getBytes();
+
+
+		// traitement :
+		do
 		{
-			System.out.println("Touvé !!! indice : " + milieu);
-			trouve = true;
-			return milieu;
+
+			System.out.println("portion de " + debut + " Ã  " + fin + " : ");
+			int milieu = (debut + fin) / 2;
+			int i = 0;
+			byte[] colonne = lectureCol1(milieu, file);
+			for (byte b : colonne) {
+				System.out.println("dans colonne = "+b);
+			}
+			
+			while (searchByte[i]==colonne[i]) {
+				System.out.println("la recherche = "+searchByte[i]+" et le pointeur = "+colonne[i]);
+
+				i++;
+			}
+			System.out.println("la recherche = "+searchByte[i]+" et le pointeur = "+colonne[i]);
+
+			if (searchByte[i]==colonne[i])
+			{
+				System.out.println("TouvÃ© !!! indice : " + milieu);
+				trouve = true;
+				return milieu;
+			}
+
+			if (searchByte[i]<colonne[i])
+			{
+				debut = milieu + 1;
+			}
+
+			if (searchByte[i]>colonne[i])
+			{
+				System.out.println(" plus petit que " + lectureLigne(milieu, file));
+				fin = milieu;
+			}
+
+			if (fin == -1 || debut == structure[0] || debut == fin)
+			{
+				rechercheTerminee = true;
+			}
+		}
+		while(!trouve && !rechercheTerminee);
+
+		if (!trouve)
+		{
+			System.out.println("Elment non trouvï¿½...");
 		}
 
-		if (lectureLigne(milieu, file).compareTo(recherche) < 0)
-		{
-			System.out.println(" plus grand que " + lectureLigne(milieu, file));
-			debut = milieu + 1;
-		}
-
-		if (lectureLigne(milieu, file).compareTo(recherche) > 0)
-		{
-			System.out.println(" plus petit que " + lectureLigne(milieu, file));
-			fin = milieu;
-		}
-
-		if (fin == -1 || debut == structure[0] || debut == fin)
-		{
-			rechercheTerminee = true;
-		}
-	}
-	while(!trouve && !rechercheTerminee);
-
-	if (!trouve)
-	{
-		System.out.println("El�ment non trouv�...");
-	}
 
 
-	return -1;
 
-}	
+
+
+
+
+
+		return -1;
+
+	}	
+
 
 }
