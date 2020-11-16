@@ -18,7 +18,7 @@ public class TpVins {
 
 	public static void main(String[] args) {
 
-		//On commence par aller lire le fichier
+		
 		lectureFichier(lesVins);
 		System.out.println("bytes");
 
@@ -28,12 +28,13 @@ public class TpVins {
 
 		triSelectionRecursif(vinsBin, structure[0]);
 		
-		//si écritureFichier
+		//mettre tout le contenu de la colonne 1 pour la recherche
 		String recherche = "Domaine Alain Geoffroy Vautigreau-------------";
 		
 		//si writeFileRaf
 		//String recherche = "Château Rauzan-Gassies                        Saint-Estephe          Bordelais           Lrq121O12C";
 		
+		//Fonctionne seulement avec Cp1252
 		rechercheDichoto(vinsBin,recherche);
 		
 		//rechercheV2(vinsBin, recherche);
